@@ -15,7 +15,7 @@ What is [Pandoc][1]? From the project website:
 
 # Pandoc: a Tool I Use and Like
 
-* I spend a lot of time writing,
+* I spend a lot of time writing
   * and I love [Vim][3], [Markdown][4], and the command line
   * (and avoid browser-based WYSIWYG editors when I can)
 * But it has a ton of utility outside of that
@@ -29,7 +29,7 @@ I do all my blog writing in Vim/Markdown, then, when I'm ready to publish, conve
 
 This gets me a few things I really like:
 
-* Curly quotes in place of straight ones and en-dashes in place of `--` (from the [`smart` extension][9])
+* Curly quotes in place of straight ones and en-dashes in place of `--` (from the [smart extension][9])
 * [Daring Fireball-style][10] footnotes with return links
 
 Pandoc uses [Pandoc Markdown][7] by default, an "extended and slightly revised version" of the original syntax.
@@ -58,18 +58,13 @@ cat examples/blog_post.md | pandoc -t html
 
 ## Markdown ➞ Rich Text (Basecamp)
 
-I also sometimes find myself writing decently long [Basecamp][11] posts Basecamp 3 has a fine WYSIWYG editor (🪦 Textile), but again, I'd rather be in Vim. Pasting HTML into Basecamp doesn't work (just shows the code verbatim), but I've found that if I convert my Markdown notes to HTML and open the HTML in a browser, I can copy and paste that directly into Basecamp with good results. Leveraging MacOS' `open` command, this one-liner does the trick[^2]:
-
-```
-cat [filename.md] \
-  | pandoc -t html \
-  > /tmp/output.html \
-  && open /tmp/output.html \
-  && read -n 1 \
-  && rm /tmp/output.html
-```
-
-This will convert the contents to HTML, save that to a file, open the file in a browser, wait for the user to hit enter, and the remove the file. Without that `read -n 1`, it'll remove the file before the browser has a chance to open it.
+* I also sometimes find myself writing decently long [Basecamp][11] posts
+* Basecamp 3 has a fine WYSIWYG editor (🪦 Textile)
+  * but again, I'd rather be in Vim
+* Pasting HTML into Basecamp doesn't work
+  * but you can convert MD to HTML
+  * open in browser
+  * then copy/paste
 
 ---
 
@@ -102,30 +97,49 @@ cat examples/team_update.md \
 
 ## HTML ➞ Text
 
-We built an app for one of our clients that takes in news articles (in HTML) via an API and sends them as emails to _their_ clients (think big brands) if certain criteria are met. Recently, we were making improvements to the plain text version of the emails, and we noticed that some of the articles were coming in without any linebreaks in the content. When we removed the HTML (via Rails' [`strip_tags` helper][12]), the resulting content was all on one line, which wasn't very readable. So imagine an article like this:
+* A client app receives news articles (in HTML)
+  * and emails them out (as HTML and plain text)
+* The incoming articles often lack linebreaks
+* Running the article through Rails' `strip_tags` similarly has no linebreaks
+* This is unreadable
+* Pandoc can convert from HTML to plain text
+* And has nice Ruby bindings
 
-```
-<h1>Headline</h1> <p>A paragraph.</p> <ul><li>List item #1</li> <li>List item #2</li></ul>
-```
+---
 
-Our initial approach (with `strip_tags`) gives us this:
+## HTML ➞ Text
 
-```
-Headline A paragraph. List item #1 List item #2
-```
+Example article:
 
-Not great! But fortunately, some bright fellow had the idea to pull in Pandoc, and some even brighter person packaged up some [Ruby bindings][2] for it. Taking that same content and running it through `PandocRuby.html(content).to_plain` gives us:
-
-```
-Headline
-
-A paragraph.
-
--   List item #1
--   List item #2
+```bash
+cat examples/article.html
 ```
 
-Much better, and though you can't tell from this basic example, Pandoc does a great job with spacing and wrapping to generate really nice-looking plain text from HTML.
+Result of `strip_tags`:
+
+```bash
+cat examples/article.html \
+  | ruby -e "require 'action_controller';
+  puts ActionController::Base.helpers.strip_tags(STDIN.read)"
+```
+
+With Pandoc:
+
+```bash
+cat examples/article.html | pandoc -f html -t plain
+```
+
+---
+
+## HTML ➞ Text
+
+In the app:
+
+```ruby
+def formatted_plaintext
+  @formatted_plaintext ||= PandocRuby.html(full_text).to_plain
+end
+```
 
 ---
 
