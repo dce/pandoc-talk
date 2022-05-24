@@ -182,7 +182,7 @@ pbpaste | pandoc -t plain --wrap none | sed 's/00/00\n/g'
 
 ## Generate a PDF
 
-* Pandoc also includes several ways to create PDF documents.
+* Pandoc also includes several ways to create PDF documents
 * The simplest (IMO) is to install `wkhtmltopdf`
   * then instruct Pandoc to convert its input to HTML
   * but use `.pdf` in the output filename
@@ -200,7 +200,7 @@ echo "# Hello\n\nIs it me you're looking for?" \
   * I've really only scratched the surface here
   * Look at the [man page][5] for a sense of everything it can do
 * Pandoc is written in Haskell
-  * [The source][8] is pretty fun to look through if you're a certain kind of person.
+  * [The source][8] is pretty fun to look through if you're a certain kind of person
 
 ---
 
