@@ -1,19 +1,55 @@
 # Pandoc: a Tool I Use and Like
 
-Today I want to talk to you about one of my favorite command-line tools, [Pandoc][1]. From the project website:
+**David Eisinger**  
+Dev Team Meeting, 5/24/2022
+
+---
+
+# Pandoc: a Tool I Use and Like
+
+What is [Pandoc][1]? From the project website:
 
 > If you need to convert files from one markup format into another, pandoc is your swiss-army knife.
 
-I spend a lot of time writing, and I love [Vim][3], [Markdown][4], and the command line (and avoid browser-based WYSIWYG editors when I can), so that's where a lot of my Pandoc use comes in, but it has a ton of utility outside of that -- really, anywhere you need to move between different text-based formats, Pandoc can probably help. A few examples from recent memory:
+* I spend a lot of time writing,
+  * and I love [Vim][3], [Markdown][4], and the command line
+  * (and avoid browser-based WYSIWYG editors when I can)
+* But it has a ton of utility outside of that -- really, anywhere you need to move between different text-based formats, Pandoc can probably help.
+
+---
 
 ## Markdown ➞ Craft Blog Post
 
-This website you're reading presently uses [Craft CMS][6], a flexible and powerful content management system that doesn't perfectly match my writing process[^1]. Rather than composing directly in Craft, I prefer to write locally, pipe the output through Pandoc, and put the resulting HTML into a text block in the CMS. This gets me a few things I really like:
+I do all my blog writing in Vim/Markdown, then, when I'm ready to publish, convert to HTML with Pandoc, then paste that into a Craft text block.
+
+This gets me a few things I really like:
 
 * Curly quotes in place of straight ones and en-dashes in place of `--` (from the [`smart` extension][9])
 * [Daring Fireball-style][10] footnotes with return links
 
-By default, Pandoc uses [Pandoc Markdown][7] when converting Markdown docs to other formats, an "extended and slightly revised version" of the original syntax, which is how footnotes and a bunch of other things work.
+Pandoc uses [Pandoc Markdown][7] by default, an "extended and slightly revised version" of the original syntax.
+
+---
+
+## Markdown ➞ Craft Blog Post
+
+Example post:
+
+```markdown
+# Article Title
+
+Here's an article -- it has "smart punctuation" and footnotes[^1].
+
+[^1]: So fancy.
+```
+
+Convert to HTML:
+
+```bash
+cat examples/blog_post.md | pandoc -t html
+```
+
+---
 
 ## Markdown ➞ Rich Text (Basecamp)
 
@@ -29,6 +65,8 @@ cat [filename.md] \
 ```
 
 This will convert the contents to HTML, save that to a file, open the file in a browser, wait for the user to hit enter, and the remove the file. Without that `read -n 1`, it'll remove the file before the browser has a chance to open it.
+
+---
 
 ## HTML ➞ Text
 
@@ -57,6 +95,8 @@ A paragraph.
 
 Much better, and though you can't tell from this basic example, Pandoc does a great job with spacing and wrapping to generate really nice-looking plain text from HTML.
 
+---
+
 ## HTML Element ➞ Text
 
 A few months ago, we were doing Pointless Weekend and needed a domain for our [Thrillr][13] app. A few of us were looking through lists of fun top-level domains, but we realized that AWS Route 53 only supports a limited set of them. In order to get everyone the actual list, I needed a way to get all the content out of an HTML `<select>` element, and you'll never guess what I did (unless you guessed "use Pandoc"). In Firefox:
@@ -81,11 +121,15 @@ The result is something like this:
 ...
 ```
 
+---
+
 ## Preview Mermaid/Markdown (`--standalone`)
 
 A different client recently asked for an architecture diagram of a complex system that [Andrew][14] and I were working on, and we opted to use [Mermaid][15] (which is rad BTW) to create sequence diagrams to illustrate all of the interactions. Both GitHub and GitLab support Mermaid natively, which is really neat, but we wanted a way to quickly iterate on our diagrams without having to push changes to the remote repo.
 
 We devised a simple build chain ([demo version available here][16]) that watches for changes to a Markdown file, converts the Mermaid blocks to SVG, and then uses Pandoc to take the resulting document and convert it to a styled HTML page using the `--standalone` option ([here's the key line][18]). Then we could simply make our changes and refresh the page to see our progress.
+
+---
 
 ## Generate a PDF
 
@@ -97,7 +141,9 @@ echo "# Hello\n\nIs it me you're looking for?" | pandoc -t html -o hello.pdf
 
 [The result is quite nice.][17]
 
-***
+---
+
+## Closing Thoughts
 
 I think that's about all I have to say about Pandoc for today. A couple final thoughts:
 
@@ -105,33 +151,6 @@ I think that's about all I have to say about Pandoc for today. A couple final th
 * Pandoc is written in Haskell, and [the source][8] is pretty fun to look through if you're a certain kind of person.
 
 So install Pandoc with your package manager of choice and give it a shot. I think you'll find it unexpectedly useful.
-
-[^1]: My writing process is (generally):
-
-    1. Write down an idea in my notebook
-    2. Gradually add a series of bullet points (this can sometimes take awhile)
-    3. Once I feel like I have a solid outline, copy that into a Markdown file
-    4. Start collecting links (in the `[1]:` footnote style)
-    5. Write a intro
-    6. Convert the bullet points to headers, edit + rearrange
-    7. Fill in all the sections, write jokes, etc.
-    8. Write a conclusion
-    9. Create a Gist, get feedback from the team
-    10. Convert Markdown to HTML, copy to clipboard (`cat [file] | pandoc -t html | pbcopy`)
-    11. Create a new post in Craft, add a text section, flip to code view, paste clipboard contents
-    12. Fill in the rest of the post metadata
-    13. 🚢
-
-[^2]: I've actually got this wired up as a Vim command in `.vimrc`:
-
-    ```
-    command Mdpreview ! cat %
-          \ | pandoc -t html
-          \ > /tmp/output.html
-          \ && open /tmp/output.html
-          \ && read -n 1
-          \ && rm /tmp/output.html
-    ```
 
 [1]: https://pandoc.org/
 [2]: https://github.com/xwmx/pandoc-ruby
