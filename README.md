@@ -58,7 +58,7 @@ cat examples/blog_post.md | pandoc -t html
 
 ## Markdown ➞ Rich Text (Basecamp)
 
-* I also sometimes find myself writing decently long [Basecamp][11] posts
+* I also sometimes find myself writing long [Basecamp][11] posts
 * Basecamp 3 has a fine WYSIWYG editor (🪦 Textile)
   * but again, I'd rather be in Vim
 * Pasting HTML into Basecamp doesn't work
@@ -145,35 +145,38 @@ end
 
 ## HTML Element ➞ Text
 
-A few months ago, we were doing Pointless Weekend and needed a domain for our [Thrillr][13] app. A few of us were looking through lists of fun top-level domains, but we realized that AWS Route 53 only supports a limited set of them. In order to get everyone the actual list, I needed a way to get all the content out of an HTML `<select>` element, and you'll never guess what I did (unless you guessed "use Pandoc"). In Firefox:
+* Working on [Thrillr][13]
+* Needed a list of all TLDs available in AWS Route 53
+* Options were available in a `<select>` in the AWS console
+* You'll never guess what I did
+  * (unless you guessed "use Pandoc")
+
+---
+
+## HTML Element ➞ Text
 
 * Right click the select element, then click "Inspect"
 * Find the `<select>` in the DOM view that pops up
 * Right click it, then go to "Copy", then "Inner HTML"
 * You'll now have all of the `<option>` elements on your clipboard
-* In your terminal, run `pbpaste | pandoc -t plain`
 
-The result is something like this:
+```bash
+pbpaste | pandoc -t plain --wrap none | sed 's/00/00\n/g'
+```
 
-```
-.ac - $76.00
-.academy - $12.00
-.accountants - $94.00
-.agency - $19.00
-.apartments - $47.00
-.associates - $29.00
-.au - $15.00
-.auction - $29.00
-...
-```
+(This worked without all the `sed` stuff originally, but the dropdown got fancy in the interim.)
 
 ---
 
 ## Preview Mermaid/Markdown (`--standalone`)
 
-A different client recently asked for an architecture diagram of a complex system that [Andrew][14] and I were working on, and we opted to use [Mermaid][15] (which is rad BTW) to create sequence diagrams to illustrate all of the interactions. Both GitHub and GitLab support Mermaid natively, which is really neat, but we wanted a way to quickly iterate on our diagrams without having to push changes to the remote repo.
-
-We devised a simple build chain ([demo version available here][16]) that watches for changes to a Markdown file, converts the Mermaid blocks to SVG, and then uses Pandoc to take the resulting document and convert it to a styled HTML page using the `--standalone` option ([here's the key line][18]). Then we could simply make our changes and refresh the page to see our progress.
+* Andrew and I were creating sequence diagrams with [Mermaid][15]
+* GitHub and GitLab both support Mermaid natively
+  * But we wanted to be able to quickly iterate on the diagrams
+* We devised a simple build chain
+  * Watch for changes to a Markdown file
+  * Convert the Mermaid blocks to SVG
+  * Use Pandoc to take the resulting document and convert it to a styled HTML page using the `--standalone` option
 
 ---
 
@@ -181,7 +184,8 @@ We devised a simple build chain ([demo version available here][16]) that watches
 
 * Pandoc also includes several ways to create PDF documents.
 * The simplest (IMO) is to install `wkhtmltopdf`
-  * then instruct Pandoc to convert its input to HTML but use `.pdf` in the output filename
+  * then instruct Pandoc to convert its input to HTML
+  * but use `.pdf` in the output filename
 
 ```bash
 echo "# Hello\n\nIs it me you're looking for?" \
@@ -192,12 +196,19 @@ echo "# Hello\n\nIs it me you're looking for?" \
 
 ## Closing Thoughts
 
-I think that's about all I have to say about Pandoc for today. A couple final thoughts:
+* Pandoc is incredibly powerful
+  * I've really only scratched the surface here
+  * Look at the [man page][5] for a sense of everything it can do
+* Pandoc is written in Haskell
+  * [The source][8] is pretty fun to look through if you're a certain kind of person.
 
-* Pandoc is incredibly powerful -- I've really only scratched the surface here. Look at the [man page][5] to get a sense of everything it can do.
-* Pandoc is written in Haskell, and [the source][8] is pretty fun to look through if you're a certain kind of person.
+---
+
+## Closing Thoughts
 
 So install Pandoc with your package manager of choice and give it a shot. I think you'll find it unexpectedly useful.
+
+Now I will take questions.
 
 [1]: https://pandoc.org/
 [2]: https://github.com/xwmx/pandoc-ruby
