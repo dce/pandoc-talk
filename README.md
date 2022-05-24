@@ -210,6 +210,8 @@ So install Pandoc with your package manager of choice and give it a shot. I thin
 
 Now I will take questions.
 
+<https://github.com/dce/pandoc-talk>
+
 [1]: https://pandoc.org/
 [2]: https://github.com/xwmx/pandoc-ruby
 [3]: https://www.vim.org/
