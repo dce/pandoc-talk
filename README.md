@@ -11,10 +11,15 @@ What is [Pandoc][1]? From the project website:
 
 > If you need to convert files from one markup format into another, pandoc is your swiss-army knife.
 
+---
+
+# Pandoc: a Tool I Use and Like
+
 * I spend a lot of time writing,
   * and I love [Vim][3], [Markdown][4], and the command line
   * (and avoid browser-based WYSIWYG editors when I can)
-* But it has a ton of utility outside of that -- really, anywhere you need to move between different text-based formats, Pandoc can probably help.
+* But it has a ton of utility outside of that
+  * Really, anywhere you need to move between different text-based formats, Pandoc can probably help
 
 ---
 
@@ -53,7 +58,7 @@ cat examples/blog_post.md | pandoc -t html
 
 ## Markdown ➞ Rich Text (Basecamp)
 
-I also sometimes find myself writing decently long [Basecamp][11] posts. Basecamp 3 has a fine WYSIWYG editor (🪦 Textile), but again, I'd rather be in Vim. Pasting HTML into Basecamp doesn't work (just shows the code verbatim), but I've found that if I convert my Markdown notes to HTML and open the HTML in a browser, I can copy and paste that directly into Basecamp with good results. Leveraging MacOS' `open` command, this one-liner does the trick[^2]:
+I also sometimes find myself writing decently long [Basecamp][11] posts Basecamp 3 has a fine WYSIWYG editor (🪦 Textile), but again, I'd rather be in Vim. Pasting HTML into Basecamp doesn't work (just shows the code verbatim), but I've found that if I convert my Markdown notes to HTML and open the HTML in a browser, I can copy and paste that directly into Basecamp with good results. Leveraging MacOS' `open` command, this one-liner does the trick[^2]:
 
 ```
 cat [filename.md] \
@@ -65,6 +70,33 @@ cat [filename.md] \
 ```
 
 This will convert the contents to HTML, save that to a file, open the file in a browser, wait for the user to hit enter, and the remove the file. Without that `read -n 1`, it'll remove the file before the browser has a chance to open it.
+
+---
+
+## Markdown ➞ Rich Text (Basecamp)
+
+Example post:
+
+```markdown
+* **Team Member #1** is doing great.
+* **Team Member #2** is also doing great.
+* **Team Member #3** is similarly great.
+
+***
+
+The dev team is great.
+```
+
+Generate HTML preview:
+
+```bash
+cat examples/team_update.md \
+  | pandoc -t html \
+  > /tmp/output.html \
+  && open /tmp/output.html \
+  && read -n 1 \
+  && rm /tmp/output.html
+```
 
 ---
 
@@ -133,13 +165,14 @@ We devised a simple build chain ([demo version available here][16]) that watches
 
 ## Generate a PDF
 
-Finally, and this is not something I need to do very often, but Pandoc also includes several ways to create PDF documents. The simplest (IMO) is to install `wkhtmltopdf`, then instruct Pandoc to convert its input to HTML but use `.pdf` in the output filename, so something like:
+* Pandoc also includes several ways to create PDF documents.
+* The simplest (IMO) is to install `wkhtmltopdf`
+  * then instruct Pandoc to convert its input to HTML but use `.pdf` in the output filename
 
+```bash
+echo "# Hello\n\nIs it me you're looking for?" \
+  | pandoc -t html -o hello.pdf
 ```
-echo "# Hello\n\nIs it me you're looking for?" | pandoc -t html -o hello.pdf
-```
-
-[The result is quite nice.][17]
 
 ---
 
