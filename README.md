@@ -173,7 +173,7 @@ pbpaste | pandoc -t plain --wrap none | sed 's/00/00\n/g'
 * Andrew and I were creating sequence diagrams with [Mermaid][15]
 * GitHub and GitLab both support Mermaid natively
   * But we wanted to be able to quickly iterate on the diagrams
-* We devised a simple build chain
+* We devised a simple [build chain][16]
   * Watch for changes to a Markdown file
   * Convert the Mermaid blocks to SVG
   * Use Pandoc to take the resulting document and convert it to a styled HTML page using the `--standalone` option
